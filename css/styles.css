@@ -1,0 +1,43 @@
+body {
+    background-color: #e5f4e7;
+    font-family: monospace, monospace;
+    font-size: 14px;
+}
+
+div {
+    margin: 5px;
+}
+
+p {
+    margin: 2px;
+}
+
+#buttons {
+    margin-top: 25px;
+}
+
+#sliders {
+    min-width: 350px;
+    text-align: left;
+}
+
+#simulator {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Range inputs were not rendered correctly on Firefox. */
+@-moz-document url-prefix() {
+    input[type=range] {
+        appearance: none;
+        background: #d3d3d3;
+        height: 5px;
+    }
+
+    #sliders {
+        min-width: 450px;
+    }
+}

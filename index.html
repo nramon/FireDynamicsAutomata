@@ -1,0 +1,129 @@
+<!doctype html>
+<!--
+   Wildland fire spread dynamics simulator based on:
+  
+   Almeida, Rodolfo Maduro and Macau, Elbert E N, "Stochastic cellular automata
+   model for wildland fire spread dynamics," Journal of physics. Conference
+   series, vol. 285, p. 012038, 2011, doi: 10.1088/1742-6596/285/1/012038.
+   
+   Copyright (C) 2020 Ramon Novoa ramonnovoa@gmail.com
+   
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+   
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>Wildland Fire Spread Dynamics Simulator</title>
+    <meta name="description" content="Stochastic cellular automata model for wildland fire spread dynamics simulation">
+    <meta name="author" content="Ramon Novoa">
+
+    <link rel="stylesheet" href="https://nramon.github.io/FireDynamicsAutomata/css/styles.css?v=1.0">
+</head>
+
+<body>
+    <script src="https://nramon.github.io/FireDynamicsAutomata/js/fire_dynamics_simulator.js"></script>
+
+    <!-- Start the simulator. -->
+    <script>
+        window.onload = function() {
+            // Read the width of the grid from the querystring part of the URL.
+            let width = window.location.search.split('?size=')[1] || 200;
+
+            // Instantiate the simulator.
+            window.simulator = new FireDynamicsSimulator(
+                "wildland", // Canvas ID.
+                70,         // Vegetation density.
+                40,         // Probability of burning a cell in the Moore neighborhood.
+                10,         // Probability of transitioning from burning to burnt.
+                width,      // Grid width.
+                2,          // Canvas scale factor.
+                5           // Simulation speed.
+            );
+    }
+    </script>
+
+    <div id="simulator">
+        <h1>Wildland Fire Spread Dynamics Simulator</h1>
+
+        <p>Click on the canvas to start fires. Click on <i>Run</i> to start the simulation.</p>
+        <p><i>Burn probability</i> is the probability of fire burning a neighboring cell.</p>
+        <p><i>Burnt probability</i> is the probability of a burning cell becoming burnt.</p>
+
+        <!-- Simulation control buttons. -->
+        <div id="buttons">
+            <button id="reset" title="Reset the simulation" onclick="window.simulator.reset()">Reset</button>
+            <button id="zoom_in" title="Zoom in by a factor of x2" onclick="window.simulator.zoom_in()">Zoom +</button>
+            <button id="zoom_out" title="Zoom out by a factor of x2" onclick="window.simulator.zoom_out()">Zoom -</button>
+            <button id="step" title="Run a single simulation step" onclick="window.simulator.step()">Step</button>
+            <button id="run" title="Run a continouous simulation" onclick="window.simulator.run(); document.getElementById('step').disabled=true;">Run</button>
+            <button id="stop" title="Stop a running simulation" onclick="window.simulator.stop(); document.getElementById('step').disabled=false;">Stop</button>
+        </div>
+    
+        <!-- Simulation control sliders. -->
+        <div id="sliders">
+    
+            <!-- Vegetation density. -->
+            <div>
+                <label for="vegetation_prob">Vegetation density</label>
+                <input type="range" min="0" max="100" value="70" class="slider"
+                    oninput="this.nextElementSibling.value = this.value / 100.0"
+                    onpointerup="window.simulator.set_vegetation_prob(this.value); window.simulator.reset(true);"/>
+                <output for="vegetation_prob">0.7</output>
+            </div>
+    
+            <!-- Probability of burning a cell in the Moore neighborhood. -->
+            <div>
+                <label for="burning_prob">Burn probability&nbsp;&nbsp;</label>
+                <input id="burning_prob" type="range" min="0" max="100" value="40" class="slider"
+                    oninput="this.nextElementSibling.value = this.value / 100.0"
+                    onpointerup="window.simulator.set_burning_prob(this.value);" />
+                <output for="burning_prob">0.4</output>
+            </div>
+    
+            <!-- Probability of transitioning from burning to burnt. -->
+            <div>
+                <label for="burnt_prob">Burnt probability&nbsp;</label>
+                <input id="burnt_prob" type="range" min="0" max="100" value="10" class="slider"
+                    oninput="this.nextElementSibling.value = this.value / 100.0"
+                    onpointerup="window.simulator.set_burnt_prob(this.value);" />
+                <output for="burnt_prob">0.1</output>
+            </div>
+    
+            <!-- Simulation speed. -->
+            <div>
+                <label for="sim_speed">Simulation speed&nbsp;&nbsp;</label>
+                <input id="sim_speed" type="range" min="1" max="10" value="5" class="slider"
+                    oninput="this.nextElementSibling.value = this.value"
+                    onpointerup="window.simulator.set_sim_speed(this.value);" />
+                <output for="sim_speed">5</output>
+            </div>
+        </div>
+    
+        <!-- Step counter. -->
+        <div>
+            <label>Step:</label>
+            <output id="step_count">0</output>
+        </div>
+
+        <!-- Wildland canvas. -->
+        <div id="canvas">
+            <canvas id="wildland"></canvas>
+        </div>
+    </div>
+</body>
+
+</html>
+
+
