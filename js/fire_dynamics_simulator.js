@@ -332,7 +332,7 @@ class Wildland {
             }
         }
 
-        // Update the sate.
+        // Update the state.
         for (let x = 0; x < this.size; x++) {
             for (let y = 0; y < this.size; y++) {
 
@@ -340,7 +340,7 @@ class Wildland {
                 if (this.buffer[x][y] == this.burning) {
 
                     // Burn the neighborhood. It has the same effect as
-                    // computing the cell's state from adjancent burning
+                    // computing the cell's state from adjacent burning
                     // neighbors.
                     this.burn_neighborhood(x, y);
 
